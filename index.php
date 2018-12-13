@@ -14,6 +14,15 @@
 	<!-- tablesorter widgets (optional) -->
 	<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.js"></script>
 	<script type="text/javascript" src="tablesorter/js/parsers/parser-network.js"></script>
+	<style>
+		.offline td{
+			background-color:red;
+		}
+		.online td{
+			background-color:green;
+		}
+		
+	</style>
 </head>
 <body><?php
 if(isset($_GET['password']) && $_GET['password'] === "FARTFROMPUKING!@()")
@@ -24,27 +33,32 @@ if(isset($_GET['password']) && $_GET['password'] === "FARTFROMPUKING!@()")
 ?>
 	<table id="macs" class="tablesorter-dark">
 	<thead>
+		<th>Count</th>
 		<th>MAC</th>
 		<th>Count</th>
 		<th>Description</th>
 		<th>IP Address</th>
 		<th>Mac Vendor</th>
 		<th>MDNS Local</th>
+		<th>Online</th>
 	<thead>
 	<tbody>
 <?php
+	$i=1;
 	foreach ($dbh->query($query) as $row)
 	{
 		//echo "<pre>"; var_dump($row); echo "</pre>";
-		echo "<tr>";
+		echo "\t\t<tr class=\"offline\">\n";
+		echo "\t\t\t<td>$i</td>\n";
 		foreach($row as $key => $result)
 		{
 			if(is_numeric($key))
 			{
-				echo "<td>$result</td>";
+				echo "\t\t\t<td>$result</td>\n";
 			}
 		}
-		echo "</tr>";
+		echo "\t\t</tr>\n";
+		$i++;
 	}
 ?>
 	</tbody>
@@ -61,6 +75,7 @@ $(function() {
 		    3: { sorter: 'ipAddress' }, 
 		}
 	});
+	$('tr > td:last-child:contains("1")').parent().addClass('online');
 });
 </script>
 </body>
